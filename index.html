@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackAI - AI-Powered Project Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class=" icon-rocket"></i> HackAI</h1>
+                <p>Generate AI-powered hacking solutions</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Input Form -->
+            <section class="input-section">
+                <div class="input-card">
+                    <h2>🚀 Start Your AI Project</h2>
+                    <form id="projectForm" class="project-form">
+                        <div class="form-group">
+                            <label for="title">Project Title</label>
+                            <input type="text" id="title" placeholder="Enter project title..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="brief">Project Brief</label>
+                            <textarea id="brief" placeholder="Describe your project idea..." rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeHours">Time Available (hours)</label>
+                            <input type="number" id="timeHours" value="24" min="1" max="168">
+                        </div>
+                        <button type="submit" class="generate-btn" id="generateBtn">
+                            <span class="btn-text">Generate AI Solution</span>
+                            <div class="loading-spinner" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>Generating...</span>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2><i class="fas fa-magic"></i> Your AI-Generated Solution</h2>
+                    <button class="close-btn" onclick="hideResults()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="project-info">
+                    <h3 class="project-title" id="projectTitle"></h3>
+                    <p class="project-brief" id="projectBrief"></p>
+                    <div class="project-meta">
+                        <span class="meta-item">
+                            <i class="fas fa-hashtag"></i>
+                            <span id="projectId"></span>
+                        </span>
+                        <span class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="projectTime"></span> hours
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Agent Results Grid -->
+                <div class="agents-grid" id="agentsGrid">
+                    <!-- Dynamic content will be populated here -->
+                </div>
+            </section>
+
+            <!-- Demo Section -->
+            <section class="demo-section">
+                <div class="demo-card">
+                    <h3>💡 Try the Demo</h3>
+                    <p>See what HackAI can generate with sample data</p>
+                    <button class="demo-btn" onclick="hackAIApp.runDemo()">Run Demo</button>
+
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 HackAI. Powered by AI ❤️</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
