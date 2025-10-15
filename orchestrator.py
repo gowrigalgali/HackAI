@@ -445,10 +445,11 @@ class ProjectRequest(BaseModel):
     time_hours: int = 24
 
 
-# Agents
 async def planner_agent(project_id: str, brief: str, time_hours: int):
     prompt = (
-        f"Plan tasks for the project based on the brief: {brief}. Return a JSON with keys: nodes (list of tasks with id, title, description, estimate_hours), and edges (list of { '{from,to}' }). Budget {time_hours} hours."
+        f"Plan tasks for the project based on the brief: {brief}. "
+        f"Return a JSON with keys: nodes (list of tasks with id, title, description, estimate_hours), "
+        f"and edges (list of {{from,to}}). Budget {time_hours} hours."
     )
     key = f"hackmate:{project_id}:planner:{prompt_hash(prompt)}"
     cached = await cache_get(key)
@@ -464,6 +465,7 @@ async def planner_agent(project_id: str, brief: str, time_hours: int):
         out = {"error": str(e)}
     await cache_set(key, out)
     return out
+
 
 async def evaluator_agent(project_id: str, title: str, brief: str):
     prompt = (
@@ -676,11 +678,41 @@ async def generate_slides(req: SlidesRequest):
         lis = "".join(f"<li>{escape(str(b))}</li>" for b in bullets)
         items.append(f"<section class=\"slide\"><h2>{title}</h2><ul>{lis}</ul></section>")
 
-    html = f"""<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Presentation</title>
-    <style>*{{box-sizing:border-box}}html,body{{margin:0;height:100%;font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;background:#0b1020;color:#fff}}.deck{{height:100%;display:flex;overflow-x:auto;scroll-snap-type:x mandatory}}.slide{{min-width:100%;height:100%;scroll-snap-align:start;padding:60px;display:flex;flex-direction:column;justify-content:center;gap:24px;background:radial-gradient(1200px 400px at 10% 10%, rgba(80,120,255,.15), rgba(0,0,0,0))}}h2{{font-size:56px;margin:0 0 12px 0;line-height:1.1}}ul{{list-style:disc inside;font-size:24px;line-height:1.6;opacity:.95}}.help{{position:fixed;bottom:16px;right:20px;opacity:.7;font-size:14px}}</style>
-    <script>document.addEventListener('keydown',e=>{const c=document.querySelector('.deck');if(!c)return;if(['ArrowRight','PageDown',' '].includes(e.key))c.scrollBy({left:window.innerWidth,behavior:'smooth'});if(['ArrowLeft','PageUp'].includes(e.key))c.scrollBy({left:-window.innerWidth,behavior:'smooth'});if(e.key==='f'&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();});</script>
-    </head><body><div class='deck'>{''.join(items)}</div><div class='help'>Use ←/→ or Space. F for fullscreen.</div></body></html>"""
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Presentation</title>
+<style>
+*{{{{box-sizing:border-box}}}}
+html,body{{{{margin:0;height:100%;font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;background:#0b1020;color:#fff}}}}
+.deck{{{{height:100%;display:flex;overflow-x:auto;scroll-snap-type:x mandatory}}}}
+.slide{{{{min-width:100%;height:100%;scroll-snap-align:start;padding:60px;display:flex;flex-direction:column;justify-content:center;gap:24px;background:radial-gradient(1200px 400px at 10% 10%, rgba(80,120,255,.15), rgba(0,0,0,0))}}}}
+h2{{{{font-size:56px;margin:0 0 12px 0;line-height:1.1}}}}
+ul{{{{list-style:disc inside;font-size:24px;line-height:1.6;opacity:.95}}}}
+.help{{{{position:fixed;bottom:16px;right:20px;opacity:.7;font-size:14px}}}}
+</style>
+
+<script>
+document.addEventListener('keydown', e => {{
+    const c = document.querySelector('.deck');
+    if (!c) return;
+    if (['ArrowRight','PageDown',' '].includes(e.key))
+        c.scrollBy({{ left: window.innerWidth, behavior: 'smooth' }});
+    if (['ArrowLeft','PageUp'].includes(e.key))
+        c.scrollBy({{ left: -window.innerWidth, behavior: 'smooth' }});
+    if (e.key === 'f' && document.documentElement.requestFullscreen)
+        document.documentElement.requestFullscreen();
+}});
+</script>
+</head>
+<body>
+<div class='deck'>{"".join(items)}</div>
+<div class='help'>Use ←/→ or Space. F for fullscreen.</div>
+</body>
+</html>"""
+
 
     with open(slides_html_path, "w", encoding="utf-8") as f:
         f.write(html)
